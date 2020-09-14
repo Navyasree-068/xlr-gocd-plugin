@@ -8,14 +8,10 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-from ucd.UCDClientUtil import UCD_Client_Util
+from gocd.GoCDClientUtil import GoCD_Client_Util
 
-server = {}
-server['username'] = configuration.username
-server['password'] = configuration.password
-server['url'] = configuration.url
-server['disableSslVerification'] = configuration.disableSslVerification
-verifySsl = not server['disableSslVerification']
-ucd_client = UCD_Client_Util.create_ucd_client(server, None, None, verifySsl)
-ucd_client.ucd_listsystemconfiguration({})
-
+verify_ssl = not server['disableSslVerification']
+gocd_client = GoCD_Client_Util.create_gocd_client(server, username, password, verify_ssl)
+method = str(task.getTaskType()).lower().replace('.', '_')
+call = getattr(gocd_client, method)
+output = call(locals())

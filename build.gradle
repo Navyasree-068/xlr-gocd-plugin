@@ -26,21 +26,21 @@ if (!project.hasProperty('release.useLastTag')) {
   project.ext['release.useLastTag'] = true
 }
 
-test {
-    // auto detected Unit tests only, exclude the end to end integration test
-    exclude '**/*IntegrationTest.class'
-    // show standard out and standard error of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
-}
+// test {
+//     // auto detected Unit tests only, exclude the end to end integration test
+//     exclude '**/*IntegrationTest.class'
+//     // show standard out and standard error of the test JVM(s) on the console
+//     testLogging.showStandardStreams = true
+// }
 
-task integrationTest(type: Test, dependsOn: ['build']) {
-    // do not automatically scan for tests
-    scanForTestClasses = false 
-    // explicitly include the integration test
-    include '**/*IntegrationTest.class'
-    // show standard out and standard error of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
-}
+// task integrationTest(type: Test, dependsOn: ['build']) {
+//     // do not automatically scan for tests
+//     scanForTestClasses = false 
+//     // explicitly include the integration test
+//     include '**/*IntegrationTest.class'
+//     // show standard out and standard error of the test JVM(s) on the console
+//     testLogging.showStandardStreams = true
+// }
 
 dependencies {
   // Place rest-assured before JUnit dependency to make sure correct Hamcrest is used

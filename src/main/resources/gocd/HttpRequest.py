@@ -19,7 +19,7 @@ from org.apache.commons.codec.binary import Base64
 from org.apache.http import HttpHost
 from org.apache.http.client.config import RequestConfig
 from org.apache.http.util import EntityUtils
-from org.apache.http.client.methods import HttpGet, HttpPost, HttpPut, HttpDelete
+from org.apache.http.client.methods import HttpGet, HttpPost, HttpPut, HttpDelete, HttpPatch
 from org.apache.http.entity import StringEntity
 from org.apache.http.impl.client import HttpClients
 from org.apache.http.conn.ssl import SSLContextBuilder, SSLConnectionSocketFactory, TrustStrategy
