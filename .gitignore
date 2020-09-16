@@ -17,4 +17,6 @@ temp/
 supervisord.*
 .classpath
 deploy_key*
+go/
+
 
