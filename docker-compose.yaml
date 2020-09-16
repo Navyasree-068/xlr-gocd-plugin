@@ -1,0 +1,61 @@
+version: "2"
+services:
+  go-server:
+    image: gocd/gocd-server:v17.9.0
+    ports:
+      - "8153:8153"
+      - "8154:8154"
+    volumes:
+      - "./go/server/data/godata/passwd:/godata/passwd"
+      - "./go/server/data/godata:/godata"
+      - "./go/server/data/home-go-dir:/home/go"
+  go-agent:
+    image: gocd/gocd-agent-alpine-3.5:v17.10.0
+    links:
+      - go-server
+    volumes:
+      - "./go/agent/data/godata/passwd:/godata/passwd"
+      - "./go/agent/data/godata:/godata"
+      - "./go/agent/data/home-go-dir:/home/go"
+    environment:
+      - AGENT_AUTO_REGISTER_KEY=099dc57cc1f1c30a8a72e873dc3916e5
+      - AGENT_AUTO_REGISTER_RESOURCES=gradle,java
+      - AGENT_AUTO_REGISTER_ENVIRONMENTS=Integration
+      - GO_SERVER_URL=https://go-server:8154/go
+
+    
+  # xl-deploy:
+  #   image: xebialabs/xl-deploy:9.5
+  #   container_name: xl-deploy
+  #   ports:
+  #    - "4516:4516"
+  #   volumes:
+  #    - ~/XebiaLabs123/xl-deploy-server/conf:/opt/xebialabs/xl-deploy-server/conf
+  #    - ~/XebiaLabs123/xl-deploy-server/ext:/opt/xebialabs/xl-deploy-server/ext
+  #    - ~/XebiaLabs123/xl-deploy-server/hotfix/lib:/opt/xebialabs/xl-deploy-server/hotfix/lib
+  #    - ~/XebiaLabs123/xl-deploy-server/hotfix/plugins:/opt/xebialabs/xl-deploy-server/hotfix/plugins
+  #    - ~/XebiaLabs123/xl-deploy-server/plugins:/opt/xebialabs/xl-deploy-server/plugins
+  #    - ~/XebiaLabs123/xl-deploy-server/repository:/opt/xebialabs/xl-deploy-server/repository
+  #   environment:
+  #    - ADMIN_PASSWORD=admin
+  #    - ACCEPT_EULA=Y
+
+  xl-release:
+    image: xebialabs/xl-release:9.7
+    container_name: xl-release
+    ports:
+     - "5516:5516"
+    links:
+     - go-server
+    # links:
+    #  - xl-deploy
+    volumes:
+     - ~/XebiaLabs123/xl-release-server1/conf:/opt/xebialabs/xl-release-server/conf
+     - ~/XebiaLabs123/xl-release-server1/ext:/opt/xebialabs/xl-release-server/ext
+     - ~/XebiaLabs123/xl-release-server1/hotfix/:/opt/xebialabs/xl-release-server/hotfix/
+     - ~/XebiaLabs123/xl-release-server1/plugins:/opt/xebialabs/xl-release-server/plugins
+     - ~/XebiaLabs123/xl-release-server1/repository:/opt/xebialabs/xl-release-server/repository
+     - ~/XebiaLabs123/xl-release-server1/archive:/opt/xebialabs/xl-release-server/archive
+    environment:
+     - ADMIN_PASSWORD=admin 
+     - ACCEPT_EULA=Y

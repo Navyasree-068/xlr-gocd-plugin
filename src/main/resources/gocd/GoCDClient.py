@@ -32,18 +32,28 @@ class GoCD_Client(object):
         current_user_endpoint = "/current_user"
         current_user_repsonse = self.http_request.get(current_user_endpoint, contentType='application/vnd.go.cd.v1+json')
         check_response(current_user_repsonse,
-                            "Failed to get system configuration properties. Server return [%s], with content [%s]" % (
+                            "Failed to get current user properties. Server return [%s], with content [%s]" % (
                                 current_user_repsonse.status, current_user_repsonse.response))
         result = json.loads(current_user_repsonse.getResponse())
         variables['currentUser'] = result
         return result
 
-    def gocd_pipelinehistoy(self, variables):
-        pipeline_histoy_endpoint = "/pipelines/{}/history".format(variables["pipelineName"])
-        pipeline_histoy_repsonse = self.http_request.get(pipeline_histoy_endpoint, contentType='application/vnd.go.cd.v1+json')
-        check_response(pipeline_histoy_repsonse,
-                            "Failed to execute application process request. Server return [%s], with content [%s]" % (
-                                pipeline_histoy_repsonse.status, pipeline_histoy_repsonse.response))
-        result = json.loads(pipeline_histoy_repsonse.getResponse())
+    def gocd_pipelinehistory(self, variables):
+        pipeline_history_endpoint = "/pipelines/{}/history".format(variables["pipelineName"])
+        pipeline_history_response = self.http_request.get(pipeline_history_endpoint)
+        check_response(pipeline_history_response,
+                            "Failed to execute pipeline history request. Server return [%s], with content [%s]" % (
+                                pipeline_history_response.status, pipeline_history_response.response))
+        result = json.loads(pipeline_history_response.getResponse())
         variables['history'] = result
         return result
+
+    def gocd_pipelinestatus(self,variables):
+        output = self.gocd_pipelinehistory(variables)
+        stages = output["pipelines"][0]["stages"]
+        allstagesstatus = list(map(lambda stage: { stage["name"]: stage["result"] }, stages))
+        status = set(list(map(lambda stage: stage["result"], stages)))
+        finalstatus = "Failed "if "Failed" in status else "Unknown" if "Unknown" in status else "Passed"
+        variables['allstagesstatus'] = allstagesstatus
+        variables['finalstatus'] = finalstatus
+        return status

@@ -37,11 +37,19 @@
                   description="GoCD Server User Details" kind="map_string_string"/>
     </type>
 
-    <type type="gocd.PipelineHistoy" extends="gocd.Task">
+    <type type="gocd.PipelineHistory" extends="gocd.Task">
         <property name="pipelineName" category="input" label="Pipeline Name" description="Pipeline Activities" required="true"/>
         <property name="history" category="output" label="GoCD Pipeline History"
                   description="History of Pipeline" kind="string"/>
     </type>
+    <type type="gocd.PipelineStatus" extends="gocd.Task">
+        <property name="pipelineName" category="input" label="Pipeline Name" description="Pipeline Activities" required="true"/>
+        <property name="allstagesstatus" category="output" label="GoCD Pipeline all stages status"
+                  description="GoCD Pipeline all stages status" kind="string"/>
+        <property name="finalstatus" category="output" label="GoCD Pipeline final status"
+                  description="GoCD Pipeline final status" kind="string"/>
+    </type>
+
 </synthetic>
 
 
